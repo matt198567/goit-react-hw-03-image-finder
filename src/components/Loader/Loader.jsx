@@ -1,21 +1,18 @@
-// import { BallTriangle } from 'react-loader-spinner';
-// import styles from './Loader.module.css';
+import { Dna } from 'react-loader-spinner';
 
-// const SpinnerLoader = () => {
-//   return (
-//     <div className={styles.loader}>
-//       <BallTriangle
-//       height={100}
-//       width={100}
-//       radius={5}
-//       color="rgba(128, 128, 128, 0.9)"
-//       ariaLabel="ball-triangle-loading"
-//       wrapperClass={{}}
-//       wrapperStyle=""
-//       visible={true}
-//       />
-//     </div>
-//   );
-// };
+const SpinnerLoader = () => {
+  return (
+    <div>
+      <Dna
+        visible={true}
+        height="80"
+        width="80"
+        ariaLabel="dna-loading"
+        wrapperStyle={{}}
+        wrapperClass="dna-wrapper"
+      />
+    </div>
+  );
+};
 
-// export default SpinnerLoader;
+export default SpinnerLoader;

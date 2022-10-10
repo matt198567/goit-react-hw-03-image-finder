@@ -1,0 +1,25 @@
+.BtnContainer {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.Button {
+  cursor: pointer;
+  color: #64ed85;
+  padding: 15px 35px;
+  margin-bottom: 20px;
+
+  text-decoration: none;
+  overflow: hidden;
+  border-radius: 5px;
+  border-color: #64ed85;
+  transition: background 0.5s, color 0.5s;
+}
+
+.Button:hover {
+  background-color: #64ed85;
+  box-shadow: 0 0 40px #64ed85;
+  transition: background 0.5s, color 0.5s;
+  filter: hue-rotate(20deg);
+  color: blanchedalmond;
+}
