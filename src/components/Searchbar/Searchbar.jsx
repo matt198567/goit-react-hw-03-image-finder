@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Notiflix from 'notiflix';
 import styles from './Searchbar.module.css';
-import PropTypes from 'prop-types';
 
 class Searchbar extends Component {
   state = {
@@ -25,8 +24,6 @@ class Searchbar extends Component {
     }
 
     this.props.onSubmitHandler(this.state);
-
-    this.reset();
   };
 
   reset() {
@@ -52,6 +49,7 @@ class Searchbar extends Component {
           </button>
 
           <input
+            value={this.state.name}
             className={styles.SearchFormInput}
             type="text"
             onChange={this.handleChange}
@@ -64,9 +62,5 @@ class Searchbar extends Component {
     );
   }
 }
-
-Searchbar.propTypes = {
-  onSubmit: PropTypes.func,
-};
 
 export default Searchbar;

@@ -42,7 +42,7 @@ export class App extends Component {
             this.setState(state => ({
               hits: [...state.hits, ...response.data.hits],
               name: name,
-              page: state.page + 1,
+              // page: state.page + 1,
             }));
           } else {
             this.setState(state => ({
@@ -74,8 +74,8 @@ export class App extends Component {
 
         {loading && <SpinnerLoader />}
 
-        {hits && (
-          <ImageGallery>
+        {hits && hits.length > 0 && (
+          <ImageGallery articles={this.state.articles}>
             <ImageGalleryItem articles={hits} onImage={this.toggleModal} />
           </ImageGallery>
         )}
