@@ -9,7 +9,7 @@ class ImageGallery extends Component {
 }
 
 ImageGallery.propTypes = {
-  articles: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
 };
 
 export default ImageGallery;

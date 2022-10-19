@@ -28,12 +28,21 @@ export class App extends Component {
     }));
   };
 
+  componentDidUpdate(_, prevState) {
+    // const { name } = this.state;
+    if (
+      prevState.name !== this.state.name ||
+      prevState.page !== this.state.page
+    ) {
+      this.setState({ loading: true });
+    }
+  }
+
   getValue = ({ name, page }) => {
-    this.setState({ loading: true });
     try {
       axios
         .get(
-          `${BASE_URL}?key=${API_KEY}&q=${name}&page=${page}&${SEARCH_PARAMS}`
+          `${BASE_URL}?key=${API_KEY}&q=${this.state.name}&page=${this.state.page}&${SEARCH_PARAMS}`
         )
         .then(response => {
           if (!response.data.hits.length) {
@@ -41,14 +50,14 @@ export class App extends Component {
           } else if (name === this.state.name) {
             this.setState(state => ({
               hits: [...state.hits, ...response.data.hits],
-              name: name,
-              // page: state.page + 1,
+              // name: name,
+              // page: this.setState.page + 1,
             }));
           } else {
             this.setState(state => ({
               hits: response.data.hits,
-              name: name,
-              page: state.page + 1,
+              // name: name,
+              // page: this.setState.page + 1,
             }));
           }
         });
@@ -61,6 +70,20 @@ export class App extends Component {
     }
   };
 
+  // getValue = () => {
+  //   this.setState({
+  //     page: 1,
+  //     name: '',
+  //     hits: [],
+  //     isLoading: false,
+  //     error: false,
+  //   });
+  // };
+
+  // loadMore = () => {
+  //   this.setState(prevState => ({ page: prevState.page + 1 }));
+  // };
+
   loadMore = () => {
     this.getValue(this.state);
   };
@@ -71,12 +94,20 @@ export class App extends Component {
     return (
       <div>
         <Searchbar onSubmitHandler={this.getValue} />
-
-        {loading && <SpinnerLoader />}
-
         {hits && hits.length > 0 && (
-          <ImageGallery articles={this.state.articles}>
-            <ImageGalleryItem articles={hits} onImage={this.toggleModal} />
+          <ImageGallery>
+            {this.state.hits.map(
+              ({ id, webformatURL, largeImageURL, tags }) => (
+                <ImageGalleryItem
+                  key={id}
+                  id={id}
+                  webformatURL={webformatURL}
+                  largeImageURL={largeImageURL}
+                  tags={tags}
+                  onImage={this.toggleModal}
+                />
+              )
+            )}
           </ImageGallery>
         )}
 
@@ -87,6 +118,8 @@ export class App extends Component {
         {hits.length > 0 && (
           <LoadMoreBtn onButtonClick={() => this.loadMore()} />
         )}
+
+        {loading && <SpinnerLoader />}
       </div>
     );
   }

@@ -40,5 +40,5 @@ export default Modal;
 Modal.propTypes = {
   url: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
-  handleBackdpropClick: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
 };

@@ -1,19 +1,17 @@
 import PropTypes from 'prop-types';
 import styles from './ImageGalleryItem.module.css';
 
-function ImageGalleryItem({ articles, onImage }) {
+function ImageGalleryItem({ webformatURL, largeImageURL, tags, id, onImage }) {
   return (
     <>
-      {articles.map(({ id, webformatURL, largeImageURL, tags }) => (
-        <li className={styles.ImageGalleryItem} key={id}>
-          <img
-            src={webformatURL}
-            alt="response from API"
-            className={styles.ImageGalleryItemImage}
-            onClick={() => onImage(largeImageURL, tags, id)}
-          />
-        </li>
-      ))}
+      <li className={styles.ImageGalleryItem}>
+        <img
+          src={webformatURL}
+          alt="response from API"
+          className={styles.ImageGalleryItemImage}
+          onClick={() => onImage(largeImageURL, tags, id)}
+        />
+      </li>
     </>
   );
 }
@@ -21,6 +19,9 @@ function ImageGalleryItem({ articles, onImage }) {
 export default ImageGalleryItem;
 
 ImageGalleryItem.propTypes = {
-  articles: PropTypes.func.isRequired,
   onImage: PropTypes.func.isRequired,
+  webformatURL: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
 };
