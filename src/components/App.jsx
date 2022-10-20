@@ -18,9 +18,10 @@ export class App extends Component {
     loading: false,
     largeImageURL: '',
     tags: '',
+    total: 0,
   };
 
-  toggleModal = (imageURL, tag, id) => {
+  toggleModal = (imageURL, tag) => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
       largeImageURL: imageURL,
@@ -29,71 +30,56 @@ export class App extends Component {
   };
 
   componentDidUpdate(_, prevState) {
-    // const { name } = this.state;
     if (
       prevState.name !== this.state.name ||
       prevState.page !== this.state.page
     ) {
-      this.setState({ loading: true });
+      this.getValue();
     }
   }
 
-  getValue = ({ name, page }) => {
-    try {
-      axios
-        .get(
-          `${BASE_URL}?key=${API_KEY}&q=${this.state.name}&page=${this.state.page}&${SEARCH_PARAMS}`
-        )
-        .then(response => {
-          if (!response.data.hits.length) {
-            Notiflix.Notify.failure('No images found!');
-          } else if (name === this.state.name) {
-            this.setState(state => ({
-              hits: [...state.hits, ...response.data.hits],
-              // name: name,
-              // page: this.setState.page + 1,
-            }));
-          } else {
-            this.setState(state => ({
-              hits: response.data.hits,
-              // name: name,
-              // page: this.setState.page + 1,
-            }));
-          }
-        });
-    } catch (error) {
-      console.error(error.message);
-    } finally {
+  getValue = () => {
+    // this.setState({ loading: true });
+    axios
+      .get(
+        `${BASE_URL}?key=${API_KEY}&q=${this.state.name}&page=${this.state.page}&${SEARCH_PARAMS}`
+      )
+      .then(response => {
+        if (!response.data.hits.length) {
+          Notiflix.Notify.failure('No images found!');
+        } else {
+          this.setState(state => ({
+            hits: [...state.hits, ...response.data.hits],
+            total: response.data.total,
+          }));
+        }
+      })
+      .catch(err => console.log(err))
+      .finally(() => this.setState({ loading: false }));
+  };
+
+  loadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
+  };
+
+  onSubmit = value => {
+    if (this.state.name !== value) {
       this.setState({
-        loading: false,
+        page: 1,
+        name: value,
+        hits: [],
+        isLoading: false,
+        error: false,
       });
     }
   };
 
-  // getValue = () => {
-  //   this.setState({
-  //     page: 1,
-  //     name: '',
-  //     hits: [],
-  //     isLoading: false,
-  //     error: false,
-  //   });
-  // };
-
-  // loadMore = () => {
-  //   this.setState(prevState => ({ page: prevState.page + 1 }));
-  // };
-
-  loadMore = () => {
-    this.getValue(this.state);
-  };
-
   render() {
-    const { hits, showModal, loading, largeImageURL, tags } = this.state;
+    const { hits, showModal, loading, largeImageURL, tags, total } = this.state;
 
     return (
       <div>
-        <Searchbar onSubmitHandler={this.getValue} />
+        <Searchbar onSubmitHandler={this.onSubmit} />
         {hits && hits.length > 0 && (
           <ImageGallery>
             {this.state.hits.map(
@@ -110,16 +96,15 @@ export class App extends Component {
             )}
           </ImageGallery>
         )}
-
-        {showModal && (
-          <Modal onClose={this.toggleModal} url={largeImageURL} alt={tags} />
-        )}
-
-        {hits.length > 0 && (
+        {hits.length > 0 && !loading && hits.length < total && (
           <LoadMoreBtn onButtonClick={() => this.loadMore()} />
         )}
 
         {loading && <SpinnerLoader />}
+
+        {showModal && (
+          <Modal onClose={this.toggleModal} url={largeImageURL} alt={tags} />
+        )}
       </div>
     );
   }
